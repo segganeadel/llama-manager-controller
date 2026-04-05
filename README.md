@@ -2,15 +2,15 @@
 
 `llama-manager-controller` is the central control plane for managing `llama.cpp` nodes.
 
-It simplifies the operational workflow around local or distributed `llama.cpp` deployments by handling:
+It is designed to simplify the operational workflow around local or distributed `llama.cpp` deployments by handling:
 
 - node registration and discovery
 - hardware capability awareness
 - instance lifecycle management
 - model download coordination
-- llama.cpp version selection per node
-- compilation or binary selection for the target platform
-- recommended runtime parameters based on platform and node specs
+- compilation/build selection
+- platform-aware runtime recommendations
+- orchestration of work across one or more nodes
 
 The controller is intended to be the single place where you manage `llama.cpp` instances instead of dealing with each node manually.
 
@@ -23,41 +23,40 @@ The controller is intended to be the single place where you manage `llama.cpp` i
 - Recommend sensible runtime parameters based on the target platform
 - Manage multiple installed `llama.cpp` versions on the same node
 
-## How it works
+## How It Works
 
 Each node exposes its hardware specifications and installed `llama.cpp` versions to the controller.
 
 The controller uses that information to decide:
 
-- which `llama.cpp` version is compatible with the node
+- which `llama.cpp` version should be used
 - whether the node should compile from source or use a prebuilt binary
-- which runtime parameters are recommended for the node
-- which installed version should be used for a given task
+- whether the node should compile `llama.cpp` locally
+- which compile-time and runtime parameters are recommended for that platform
 
-A node can have multiple `llama.cpp` versions installed at the same time. The controller selects the appropriate one depending on the model, the platform, and the available hardware.
+A node may keep multiple versions of `llama.cpp` installed. The controller can select the most appropriate one depending on the target model, hardware, and execution requirements.
 
-## Repository structure
+## Repository Structure
 
 This repository contains the controller component of the system.
 
 The controller communicates with `llama-manager-node` agents, which are responsible for executing node-level operations.
 
-## Planned responsibilities
+## Planned Responsibilities
 
 The controller may handle tasks such as:
 
-- tracking available nodes
-- collecting and storing node hardware specs
+- tracking available nodes and their hardware profiles
 - selecting a target node for an instance
-- choosing the appropriate `llama.cpp` version for that node
+- choosing the best `llama.cpp` version for a node
 - sending build and run instructions to nodes
 - coordinating model downloads
 - exposing an API or UI for management
-- storing metadata about node capabilities and instance state
+- storing metadata about node capabilities, installed versions, and instance state
 
-## Related repository
+## Related Repository
 
-- [`llama-manager-node`](https://github.com/segganeadel/llama-manager-node) — node-side agent responsible for exposing hardware specs and executing controller commands locally
+- `llama-manager-node` — node-side agent responsible for exposing hardware information and executing controller commands locally
 
 ## Status
 
